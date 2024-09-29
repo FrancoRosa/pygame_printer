@@ -4,11 +4,20 @@
 #
 # This script shows off how to transfer the frame buffer to your computer as a jpeg image.
 
-import io, pygame, rpc, serial, serial.tools.list_ports, socket, struct, sys
+import io
+import pygame
+import rpc
+import serial
+import serial.tools.list_ports
+import socket
+import struct
+import sys
 
 # Fix Python 2.x.
-try: input = raw_input
-except NameError: pass
+try:
+    input = raw_input
+except NameError:
+    pass
 
 # The RPC library above is installed on your OpenMV Cam and provides multiple classes for
 # allowing your OpenMV Cam to control over USB or WIFI.
@@ -43,28 +52,12 @@ sys.stdout.flush()
 ##############################################################
 
 
-# white color 
-color = (255,255,255) 
-  
-# light shade of the button 
-color_light = (170,170,170) 
-  
-# dark shade of the button 
-color_dark = (100,100,100) 
-
-# defining a font 
-pygame.font.init()
-smallfont = pygame.font.SysFont('Corbel',35) 
-
-# this font 
-text = smallfont.render('PRINT' , True , color) 
-
-
-
 def get_frame_buffer_call_back(pixformat_str, framesize_str, cutthrough, silent):
-    if not silent: print("Getting Remote Frame...")
+    if not silent:
+        print("Getting Remote Frame...")
 
-    result = interface.call("jpeg_image_snapshot", "%s,%s" % (pixformat_str, framesize_str))
+    result = interface.call("jpeg_image_snapshot", "%s,%s" %
+                            (pixformat_str, framesize_str))
     if result is not None:
 
         size = struct.unpack("<I", result)[0]
@@ -81,7 +74,7 @@ def get_frame_buffer_call_back(pixformat_str, framesize_str, cutthrough, silent)
                 # GET BYTES NEEDS TO EXECUTE NEXT IMMEDIATELY WITH LITTLE DELAY NEXT.
 
                 # Read all the image data in one very large transfer.
-                interface.get_bytes(img, 5000) # timeout
+                interface.get_bytes(img, 5000)  # timeout
 
         else:
             # Slower data transfer with error checking.
@@ -89,27 +82,34 @@ def get_frame_buffer_call_back(pixformat_str, framesize_str, cutthrough, silent)
             # Transfer 32 KB chunks.
             chunk_size = (1 << 15)
 
-            if not silent: print("Reading %d bytes..." % size)
+            if not silent:
+                print("Reading %d bytes..." % size)
             for i in range(0, size, chunk_size):
                 ok = False
-                for j in range(3): # Try up to 3 times.
-                    result = interface.call("jpeg_image_read", struct.pack("<II", i, chunk_size))
+                for j in range(3):  # Try up to 3 times.
+                    result = interface.call(
+                        "jpeg_image_read", struct.pack("<II", i, chunk_size))
                     if result is not None:
-                        img[i:i+chunk_size] = result # Write the image data.
-                        if not silent: print("%.2f%%" % ((i * 100) / size))
+                        img[i:i+chunk_size] = result  # Write the image data.
+                        if not silent:
+                            print("%.2f%%" % ((i * 100) / size))
                         ok = True
                         break
-                    if not silent: print("Retrying... %d/2" % (j + 1))
+                    if not silent:
+                        print("Retrying... %d/2" % (j + 1))
                 if not ok:
-                    if not silent: print("Error!")
+                    if not silent:
+                        print("Error!")
                     return None
 
         return img
 
     else:
-        if not silent: print("Failed to get Remote Frame!")
+        if not silent:
+            print("Failed to get Remote Frame!")
 
     return None
+
 
 pygame.init()
 # screen_w = 640
@@ -118,11 +118,11 @@ screen_w = 1280
 screen_h = 720
 img_w = 640
 img_h = 480
-width = screen_w 
+width = screen_w
 height = screen_h
 
 x_centered = screen_w / 2 - img_w / 2
-y_centered = screen_h / 2 - img_h / 2 
+y_centered = screen_h / 2 - img_h / 2
 try:
     # screen = pygame.display.set_mode((screen_w, screen_h), flags=pygame.RESIZABLE)
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -133,7 +133,7 @@ except TypeError:
 pygame.display.set_caption("Frame Buffer")
 clock = pygame.time.Clock()
 
-while(True):
+while (True):
     sys.stdout.flush()
 
     # You may change the pixformat and the framesize of the image transferred from the remote device
@@ -145,25 +145,30 @@ while(True):
     # more quickly from one image buffer to another. Note: This works because once an RPC call
     # completes successfully both the master and slave devices are synchronized completely.
     #
-    img = get_frame_buffer_call_back("sensor.RGB565", "sensor.QQVGA", cutthrough=True, silent=True)
+    img = get_frame_buffer_call_back(
+        "sensor.RGB565", "sensor.QQVGA", cutthrough=True, silent=True)
     if img is not None:
         try:
-            screen.blit(pygame.transform.scale(pygame.image.load(io.BytesIO(img), "jpg"), (screen_w, screen_h)), (0, 0))
-            mouse = pygame.mouse.get_pos() 
-      
-            # if mouse is hovered on a button it 
-            # changes to lighter shade  
-            if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40: 
-                pygame.draw.rect(screen,color_light,[width/2,height/2,140,40]) 
-                
-            else: 
-                pygame.draw.rect(screen,color_dark,[width/2,height/2,140,40]) 
-            
-            # superimposing the text onto our button 
-            screen.blit(text , (width/2+50,height/2)) 
+            screen.blit(pygame.transform.scale(pygame.image.load(
+                io.BytesIO(img), "jpg"), (screen_w, screen_h)), (0, 0))
+            mouse = pygame.mouse.get_pos()
+
+            # if mouse is hovered on a button it
+            # changes to lighter shade
+            if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40:
+                pygame.draw.rect(screen, color_light, [
+                                 width/2, height/2, 140, 40])
+
+            else:
+                pygame.draw.rect(screen, color_dark, [
+                                 width/2, height/2, 140, 40])
+
+            # superimposing the text onto our button
+            screen.blit(text, (width/2+50, height/2))
             pygame.display.update()
             clock.tick()
-        except pygame.error: pass
+        except pygame.error:
+            pass
 
     print(clock.get_fps())
 
@@ -178,5 +183,3 @@ while(True):
 
             if event.key == pygame.K_SPACE:
                 sys.exit()
-
-    
