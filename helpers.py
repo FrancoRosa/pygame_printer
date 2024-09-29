@@ -7,9 +7,10 @@ printer_name = 'Canon_SELPHY_CP1300_USB_'
 p_width, p_height = 6*inch,  4*inch
 
 
-def get_pdf(pdf_path, image_path):
-    image = Image.open(image_path)
-    image_width, image_height = image.size
+def get_pdf(pdf_path, img_obj):
+    new_img_path = "/tmp/img.jpg"
+    img_obj.save(new_img_path)
+    image_width, image_height = img_obj.size
     
     pdf_canvas = canvas.Canvas(pdf_path, pagesize=(p_width, p_height))
     pdf_width = p_width
@@ -25,7 +26,7 @@ def get_pdf(pdf_path, image_path):
     y_position = (pdf_height - scaled_height) / 2
 
     # Draw the image on the PDF
-    pdf_canvas.drawImage(image_path, x_position, y_position,
+    pdf_canvas.drawImage(new_img_path, x_position, y_position,
                         scaled_width, scaled_height)
 
     # Save the PDF
@@ -43,5 +44,5 @@ def print_file(file_name):
     conn.printFile(printer_name, file_name, "ir_image", {})
     
     
-get_pdf("out.pdf","tests/demo.png" ) 
-print_file("out.pdf")
+# get_pdf("out.pdf","tests/demo.png" ) 
+# print_file("/tmp/out.pdf")
