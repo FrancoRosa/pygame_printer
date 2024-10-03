@@ -1,5 +1,7 @@
 import os
 import cups
+import shutil
+
 from datetime import datetime
 from reportlab.lib.pagesizes import inch
 from reportlab.pdfgen import canvas
@@ -45,12 +47,13 @@ def get_pdf(pdf_path, img_obj):
     pdf_canvas.drawImage(new_img_path, x_position, y_position,
                         scaled_width, scaled_height)
 
-    pdf_canvas.drawImage(get_pdf_name(), x_position, y_position,
-                        scaled_width, scaled_height)
+    
     # Save the PDF
     pdf_canvas.save()
+    history_record = get_pdf_name()
+    shutil.copy("/tmp/out.pdf", history_record)
 
-    print(f"PDF created successfully at: {pdf_path}")
+    print(f"...pdf saved at: {history_record}")
 
 def print_file(file_name):
     conn = cups.Connection()
