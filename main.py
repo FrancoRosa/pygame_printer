@@ -142,8 +142,8 @@ while (True):
                     print("... printing")
                     print(printerimage_jpg.size)
                     
-                    get_pdf("/tmp/out.pdf", printerimage_jpg) 
-                    print_file("/tmp/out.pdf")
+                    file_to_print = get_pdf("/tmp/out.pdf", printerimage_jpg) 
+                    print_file(file_to_print)
                     counter = 20
                 else:
                     print("...already printing")

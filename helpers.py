@@ -2,6 +2,7 @@ import os
 import cups
 import shutil
 
+from time import sleep
 from datetime import datetime
 from reportlab.lib.pagesizes import inch
 from reportlab.pdfgen import canvas
@@ -54,6 +55,7 @@ def get_pdf(pdf_path, img_obj):
     shutil.copy("/tmp/out.pdf", history_record)
 
     print(f"...pdf saved at: {history_record}")
+    return history_record
 
 def print_file(file_name):
     conn = cups.Connection()
@@ -62,5 +64,6 @@ def print_file(file_name):
     for printer in printers:
         print(printer)
     print("... printing")
+    sleep(1)
     conn.printFile(printer_name, file_name, "ir_image", {})
     
