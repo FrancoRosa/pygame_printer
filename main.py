@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import io
 import pygame
 import rpc
@@ -79,8 +80,8 @@ text1 = smallfont.render('.. wait', True, white)
 
 bw = 100
 bh = 40    
-bx = width/2 - bw/2
-by = height - bh/2 - 100
+bx = round(width/2 - bw/2)
+by = round(height - bh/2 - 100)
 
 
 pygame.display.set_caption("IR Camera")
@@ -121,7 +122,7 @@ while (True):
         except pygame.error:
             pass
 
-    print(clock.get_fps())
+    # print(clock.get_fps()) //comented out to remove verbose
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
