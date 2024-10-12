@@ -11,13 +11,13 @@ from fpdf import FPDF
 
 printer_name = 'Canon_SELPHY_CP1300_USB_'
 printer_dir = "/home/senseable/print_history"
-logo_dir="/home/senseable/pygame_printer"
+logo_dir="/home/senseable/pygame_printer/logo.png"
 
 p_width, p_height = 6*inch,  4*inch
 
 def composePdf(image_dir, out_dir, logo_dir):
-    logo_width=50
-    logo_hight=50
+    logo_width=30
+    logo_hight=15
     paper_width=148.5
     paper_height=210
     pdf = FPDF(orientation="L", unit="mm", format="A5")
@@ -29,14 +29,14 @@ def composePdf(image_dir, out_dir, logo_dir):
 def composePdfObj(image_obj, out_dir):
     new_img_path = "/tmp/img.jpg"
     image_obj.save(new_img_path)
-    logo_width=50
-    logo_hight=50
+    logo_width=30
+    logo_hight=15
     paper_width=148.5
     paper_height=210
     pdf = FPDF(orientation="L", unit="mm", format="A5")
     pdf.add_page()
-    pdf.image(name=new_img_path, x=0,y = 0, w = paper_width, h = paper_height)
-    pdf.image(name=logo_dir, x=10, y = paper_height/2-logo_hight/2, w = logo_width, h = logo_hight)
+    pdf.image(name=new_img_path, x=0,y = 0, w = paper_height, h = paper_width)
+    pdf.image(name=logo_dir, x=5, y = 5, w = logo_width, h = logo_hight)
     pdf.output(out_dir)
     
     history_record = get_pdf_name()

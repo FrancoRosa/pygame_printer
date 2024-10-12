@@ -139,9 +139,8 @@ while (True):
                     print("... printing")
                     print(printerimage_jpg.size)
                     
-                    # file_to_print = get_pdf("/tmp/out.pdf", printerimage_jpg) 
                     file_to_print = composePdfObj(printerimage_jpg,"/tmp/out.pdf")
-                    # print_file(file_to_print)
+                    print_file(file_to_print)
                     counter = 20
                 else:
                     print("...already printing")
