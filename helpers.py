@@ -6,13 +6,45 @@ from time import sleep
 from datetime import datetime
 from reportlab.lib.pagesizes import inch
 from reportlab.pdfgen import canvas
-from PIL import Image
+from fpdf import FPDF
+
 
 printer_name = 'Canon_SELPHY_CP1300_USB_'
 printer_dir = "/home/senseable/print_history"
+logo_dir="/home/senseable/pygame_printer"
+
 p_width, p_height = 6*inch,  4*inch
 
+def composePdf(image_dir, out_dir, logo_dir):
+    logo_width=50
+    logo_hight=50
+    paper_width=148.5
+    paper_height=210
+    pdf = FPDF(orientation="L", unit="mm", format="A5")
+    pdf.add_page()
+    pdf.image(name=image_dir, x=0,y = 0, w = paper_width, h = paper_height)
+    pdf.image(name=logo_dir, x=10, y = paper_height/2-logo_hight/2, w = logo_width, h = logo_hight)
+    pdf.output(out_dir)
+    
+def composePdfObj(image_obj, out_dir):
+    new_img_path = "/tmp/img.jpg"
+    image_obj.save(new_img_path)
+    logo_width=50
+    logo_hight=50
+    paper_width=148.5
+    paper_height=210
+    pdf = FPDF(orientation="L", unit="mm", format="A5")
+    pdf.add_page()
+    pdf.image(name=new_img_path, x=0,y = 0, w = paper_width, h = paper_height)
+    pdf.image(name=logo_dir, x=10, y = paper_height/2-logo_hight/2, w = logo_width, h = logo_hight)
+    pdf.output(out_dir)
+    
+    history_record = get_pdf_name()
+    shutil.copy("/tmp/out.pdf", history_record)
 
+    print(f"...pdf saved at: {history_record}")
+    return history_record
+        
 def verify_dir(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)

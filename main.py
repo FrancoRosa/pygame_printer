@@ -2,12 +2,9 @@
 import io
 import pygame
 import rpc
-import serial
-import serial.tools.list_ports
-import socket
 import struct
 import sys
-from helpers import get_pdf, print_file 
+from helpers import  print_file,composePdfObj 
 from PIL import Image
 
 interface = rpc.rpc_usb_vcp_master(port="/dev/ttyACM0")
@@ -142,8 +139,9 @@ while (True):
                     print("... printing")
                     print(printerimage_jpg.size)
                     
-                    file_to_print = get_pdf("/tmp/out.pdf", printerimage_jpg) 
-                    print_file(file_to_print)
+                    # file_to_print = get_pdf("/tmp/out.pdf", printerimage_jpg) 
+                    file_to_print = composePdfObj(printerimage_jpg,"/tmp/out.pdf")
+                    # print_file(file_to_print)
                     counter = 20
                 else:
                     print("...already printing")
